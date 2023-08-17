@@ -1,0 +1,33 @@
+version: '3'
+services:
+  suricata-container:
+    build:
+      context: ./suricata-container
+    container_name: suricata-container
+    networks:
+      - sniffing-net
+    volumes:
+      - ./suricata-container/suricata.yaml:/etc/suricata/suricata.yaml:ro
+
+  victim-container:
+    build:
+      context: ./victim-container
+    container_name: victim-container
+    networks:
+      - sniffing-net
+
+  attacker-container:
+    build:
+      context: ./attacker-container
+    container_name: attacker-container
+    networks:
+      - sniffing-net
+    depends_on:
+      - victim-container
+    command: ["curl", "http://victim-container:80"]
+    # Ubah perintah sesuai kebutuhan, misalnya:
+    # command: ["ping", "victim-container"]
+
+networks:
+  sniffing-net:
+    driver: bridge

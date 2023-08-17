@@ -1,0 +1,33 @@
+# suricata.yaml
+
+# Logging
+logging:
+  default-log-dir: /var/log/suricata/
+  eve-log:
+    enabled: yes
+    filetype: regular
+    filename: eve.json
+    types:
+      - alert
+      - http
+
+# Network
+vars:
+  address-groups:
+    HOME_NET: "[172.16.4.0/32]"  # Adjust this based on your network
+    EXTERNAL_NET: "!$HOME_NET"
+
+# Detection
+default-rule-path: /etc/suricata/rules
+rule-files:
+ - suricata.rules
+
+# Outputs
+outputs:
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert
+        - http
